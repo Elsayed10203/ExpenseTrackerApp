@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="ExpenseTrackerApp.UI.Controls.FloatingLabelEntry"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="this">
+    <Grid
+        Padding="0"
+        ColumnDefinitions="*,Auto"
+        RowDefinitions="*">
+        <Border
+            x:Name="Frm"
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0"
+            Padding="0"
+            BackgroundColor="White"
+            Stroke="{StaticResource DisclosureDefColor}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="7" />
+            </Border.StrokeShape>
+            <Grid
+                Padding="10,5"
+                ColumnDefinitions="*,Auto"
+                HorizontalOptions="FillAndExpand">
+
+                <Entry
+                    x:Name="EntryField"
+                    Completed="HandleEntryCompleted"
+                    FlowDirection="MatchParent"
+                    Focused="HandleEntryFocus"
+                    HeightRequest="40"
+                    HorizontalOptions="FillAndExpand"
+                    HorizontalTextAlignment="Start"
+                    IsPassword="{Binding IsPassword, Source={x:Reference this}}"
+                    Keyboard="{Binding Keyboard, Source={x:Reference this}}"
+                    ReturnType="{Binding ReturnType, Source={x:Reference this}}"
+                    Text="{Binding Text, Source={x:Reference this}}"
+                    TextColor="{StaticResource TextColor}"
+                    Unfocused="HandleEntryUnFocus"
+                    VerticalOptions="CenterAndExpand" />
+
+                <ImageButton
+                    Grid.Column="1"
+                    Padding="10"
+                    BackgroundColor="Transparent"
+                    Clicked="EndIconClick_Clicked"
+                    HeightRequest="40"
+                    HorizontalOptions="End"
+                    IsVisible="{Binding IsEndIconVisible, Source={x:Reference this}}"
+                    Source="{Binding EndIcon, Source={x:Reference this}}"
+                    VerticalOptions="FillAndExpand"
+                    WidthRequest="40" />
+
+            </Grid>
+        </Border>
+
+        <Label
+            x:Name="LabelTitle"
+            Grid.Column="0"
+            Margin="0,0,0,10"
+            Padding="10,5"
+            Text="{Binding Title, Source={x:Reference this}}"
+            TextColor="{StaticResource PlaceholderTextColor}"
+            VerticalOptions="Center">
+
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="HandleTapLabelTitle" />
+            </Label.GestureRecognizers>
+
+        </Label>
+    </Grid>
+</ContentView>

@@ -106,4 +106,7 @@
   <data name="Password" xml:space="preserve">
     <value>كلمة المرور</value>
   </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>SignIn</value>
+  </data>
 </root>
