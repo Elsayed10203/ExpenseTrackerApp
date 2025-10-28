@@ -1,11 +1,13 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using ExpenseTrackerApp.Services.Auth;
 using ExpenseTrackerApp.UI.FontAwesome;
-using ExpenseTrackerApp.UI.Modules.Home;
+ using ExpenseTrackerApp.UI.Modules.TabbedHome;
+using FreshMvvm.Maui;
 
 namespace ExpenseTrackerApp.UI.Modules.Login
 {
-    public class LoginPageModel : BasePageModel
+    public partial class LoginPageModel : BasePageModel
     {
         private readonly IAuthService authService;
 
@@ -17,34 +19,36 @@ namespace ExpenseTrackerApp.UI.Modules.Login
                 IsPassword = !IsPassword;
                 PasswordEndIcon.Glyph = IsPassword ? Glyph.Eye : Glyph.EyeSlash;
             });
-
+           
             this.authService = authService;   
         }
 
         #region Properties
-        private string _email;
+         private string email ;
         public string Email
         {
-            get { return _email; }
+            get => email;
             set
             {
-                _email = value;
-                SignInCommand.NotifyCanExecuteChanged();
+                email = value;
+                SignInCommand.NotifyCanExecuteChanged();    
+                RaisePropertyChanged();
             }
         }
 
-        private string _password;
+        private string password = string.Empty;
         public string Password
         {
-            get { return _password; }
+            get => password;
             set
             {
-                _password = value;
+                password = value;
                 SignInCommand.NotifyCanExecuteChanged();
+                RaisePropertyChanged();
             }
         }
 
-        private FontImageSource _passwordEndIcon = new FontImageSource()
+        private FontImageSource passwordEndIcon = new FontImageSource()
         {
             //  FontFamily = "FAFS",
             FontFamily = "FAPL",
@@ -52,26 +56,28 @@ namespace ExpenseTrackerApp.UI.Modules.Login
             Size = 18,
             Color = Color.FromArgb("#82849c")
         };
+
         public FontImageSource PasswordEndIcon
         {
-            get => _passwordEndIcon;
+            get => passwordEndIcon;
             set
             {
-                _passwordEndIcon = value;
+                passwordEndIcon = value;
+                RaisePropertyChanged();
+            }
+        }       
+
+        private bool isPassword=true;
+        public bool IsPassword
+        {
+            get => isPassword;
+            set
+            {
+                isPassword = value;
                 RaisePropertyChanged();
             }
         }
 
-        private bool _isPassword = true;
-        public bool IsPassword
-        {
-            get { return _isPassword; }
-            set
-            {
-                _isPassword = value;
-                RaisePropertyChanged();
-            }
-        }
         #endregion
 
         #region Commands
@@ -80,14 +86,20 @@ namespace ExpenseTrackerApp.UI.Modules.Login
 
         #endregion
 
-        private bool IsInputValid() =>(!(string.IsNullOrWhiteSpace(Password) || Password.Length< 3)) && !string.IsNullOrWhiteSpace(Email);
+      //  private bool IsInputValid() => (!(string.IsNullOrWhiteSpace(Password) || Password.Length < 3)) && !string.IsNullOrWhiteSpace(Email);
+        private bool IsInputValid()
+        {
+            var res=(!(string.IsNullOrWhiteSpace(Password) || Password.Length < 3)) && !string.IsNullOrWhiteSpace(Email);
+            return res;
+        }
 
         private async Task ExecSignInCommand()
         {
             IsBusy = true; 
             var res =  await  authService.Login(Email, Password); 
-            IsBusy = false; 
-          await  CoreMethods.PushPageModel<TappedHomePageModel>(null, false, true);   
+            IsBusy = false;
+            var page = FreshPageModelResolver.ResolvePageModel<HomeTabbedPageModel>();
+            Application.Current.MainPage = new FreshNavigationContainer(page);
         }
 
     }

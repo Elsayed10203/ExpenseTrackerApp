@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ExpenseTrackerApp.UI.Modules.AddEditExpense.AddEditExpensePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:catg="clr-namespace:ExpenseTrackerApp.UI.Modules.Category"
+    xmlns:viewModel="clr-namespace:ExpenseTrackerApp.UI.Modules.AddEditExpense"
+    x:Name="this"
+    x:DataType="viewModel:AddEditExpensePageModel"
+    BackgroundColor="{StaticResource PageBG}"
+    NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <ScrollView>
+            <Grid>
+                <StackLayout Padding="20" Spacing="25">
+
+                    <StackLayout Orientation="Horizontal">
+                        <Label
+                            Grid.Row="0"
+                            FontAttributes="Bold"
+                            FontSize="20"
+                            HorizontalOptions="FillAndExpand"
+                            Text="Add Expense"
+                            TextColor="{StaticResource Gray600}" />
+
+                        <catg:CategoryTemplate
+                            BindingContext="{Binding ExpenceItem.Category}"
+                            HeightRequest="100"
+                            WidthRequest="100">
+                            <catg:CategoryTemplate.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={x:Reference this}, Path=BindingContext.CancelCommand}" />
+                            </catg:CategoryTemplate.GestureRecognizers>
+                        </catg:CategoryTemplate>
+                    </StackLayout>
+
+                    <VerticalStackLayout Spacing="25">
+                        <Entry
+                            x:Name="AmountEntry"
+                            HorizontalOptions="FillAndExpand"
+                            Keyboard="Numeric"
+                            Placeholder="Amount"
+                            Text="{Binding ExpenceItem.Amount}"
+                            Visual="Material" />
+                        <Editor
+                            x:Name="TitleEntry"
+                            Placeholder="Descrption"
+                            Text="{Binding ExpenceItem.ExpenseDescrption}" />
+
+                        <DatePicker
+                            x:Name="DatePicker"
+                            Date="{Binding ExpenceItem.ExpenseDate}"
+                            Format="dd/MM/yyyy" />
+                    </VerticalStackLayout>
+                    <Button
+                        x:Name="SaveButton"
+                        Command="{Binding AddCommand}"
+                        Style="{StaticResource SubmitButtonStyle}"
+                        Text="Save Expense" />
+                </StackLayout>
+                <ActivityIndicator
+                    IsRunning="True"
+                    IsVisible="{Binding IsBusy}"
+                    VerticalOptions="Center" />
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

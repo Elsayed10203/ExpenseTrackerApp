@@ -6,56 +6,64 @@
     xmlns:controls="clr-namespace:ExpenseTrackerApp.UI.Controls"
     xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:trans="clr-namespace:ExpenseTrackerApp.Languages"
+    xmlns:viewModel="clr-namespace:ExpenseTrackerApp.UI.Modules.Login"
     x:Name="this"
     Title="LoginPage"
     BackgroundColor="#f5f5f5"
     NavigationPage.HasNavigationBar="False">
     <ScrollView VerticalOptions="FillAndExpand">
-        <StackLayout
-            Margin="0,30,0,0"
-            Padding="20"
-            Spacing="30">
+        <Grid>
+            <StackLayout
+                Margin="0,30,0,0"
+                Padding="20"
+                Spacing="30">
 
-            <StackLayout>
-                <Image
-                    Grid.Row="0"
-                    Aspect="AspectFit"
-                    HeightRequest="140"
-                    Source="wallet"
-                    VerticalOptions="Center"
-                    WidthRequest="140" />
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="Large"
-                    HorizontalOptions="Center"
-                    Text="Goodbudget"
-                    TextColor="{StaticResource Gray600}" />
+                <StackLayout>
+                    <Image
+                        Grid.Row="0"
+                        Aspect="AspectFit"
+                        HeightRequest="140"
+                        Source="wallet"
+                        VerticalOptions="Center"
+                        WidthRequest="140" />
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="Large"
+                        HorizontalOptions="Center"
+                        Text="Goodbudget"
+                        TextColor="{StaticResource Gray600}" />
+                </StackLayout>
+
+                <StackLayout Spacing="30">
+                    <controls:FloatingLabelEntry
+                        Title="{Static trans:LanguagesResources.Email}"
+                        FlowDirection="MatchParent"
+                        Keyboard="Email"
+                        Text="{Binding Email}" />
+
+                    <controls:FloatingLabelEntry
+                        Title="{Static trans:LanguagesResources.Password}"
+                        EndIcon="{Binding Source={x:Reference this}, Path=BindingContext.PasswordEndIcon}"
+                        EndIconClickCommand="{Binding Source={x:Reference this}, Path=BindingContext.PasswordClickCommand}"
+                        IsEndIconVisible="True"
+                        IsPassword="{Binding IsPassword}"
+                        Text="{Binding Password}" />
+                </StackLayout>
+
+                <Button
+                    Margin="0,15,0,0"
+                    Command="{Binding Source={x:Reference this}, Path=BindingContext.SignInCommand}"
+                    HorizontalOptions="FillAndExpand"
+                    Style="{StaticResource SubmitButtonStyle}"
+                    Text="{Static trans:LanguagesResources.SignIn}" />
             </StackLayout>
 
-            <StackLayout Spacing="30">
-                <controls:FloatingLabelEntry
-                    Title="{Static trans:LanguagesResources.Email}"
-                    FlowDirection="MatchParent"
-                    Keyboard="Email"
-                    Text="{Binding Email}" />
-
-                <controls:FloatingLabelEntry
-                    Title="{Static trans:LanguagesResources.Password}"
-                    EndIcon="{Binding Source={x:Reference this}, Path=BindingContext.PasswordEndIcon}"
-                    EndIconClickCommand="{Binding Source={x:Reference this}, Path=BindingContext.PasswordClickCommand}"
-                    IsEndIconVisible="True"
-                    IsPassword="{Binding IsPassword}"
-                    Text="{Binding Password}" />
-            </StackLayout>
-
-            <Button
-                Margin="0,15,0,0"
-                Command="{Binding Source={x:Reference this}, Path=BindingContext.SignInCommand}"
-                HorizontalOptions="FillAndExpand"
-                Style="{StaticResource SubmitButtonStyle}"
-                Text="{Static trans:LanguagesResources.SignIn}" />
-        </StackLayout>
-
+            <ActivityIndicator
+                IsRunning="True"
+                IsVisible="{Binding IsBusy}"
+                VerticalOptions="Center"
+                Color="{StaticResource Accent}" />
+        </Grid>
     </ScrollView>
 
 </ContentPage>

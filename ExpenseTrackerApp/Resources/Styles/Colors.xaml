@@ -6,6 +6,10 @@
 
 
     <Color x:Key="DisclosureDefColor">#c9c9c9</Color>
+    <Color x:Key="PageBG">#F2F2F7</Color>
+    <Color x:Key="TabBarBgColor">#FFFFFF</Color>
+    <Color x:Key="SubTextColor">#82849c</Color>
+
     <Color x:Key="TextColor">#3b3663</Color>
     <Color x:Key="PlaceholderTextColor">#82849C</Color>
     <Color x:Key="Accent">#f79520</Color>

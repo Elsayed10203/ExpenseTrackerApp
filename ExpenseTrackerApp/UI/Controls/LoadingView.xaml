@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<StackLayout
+    x:Class="ExpenseTrackerApp.UI.Controls.LoadingView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="this"
+    BackgroundColor="Transparent"
+    HorizontalOptions="CenterAndExpand"
+    Orientation="Horizontal"
+    VerticalOptions="CenterAndExpand">
+    <ActivityIndicator
+        IsRunning="True"
+        WidthRequest="30"
+        Color="{StaticResource Accent}" />
+
+    <Label
+        FontSize="Medium"
+        HorizontalTextAlignment="Center"
+        IsVisible="{Binding ShowLoadingText, Source={x:Reference this}}"
+        Text="{Binding LoadingText, Source={x:Reference this}}"
+        TextColor="#3b3663"
+        VerticalTextAlignment="Center" />
+</StackLayout>

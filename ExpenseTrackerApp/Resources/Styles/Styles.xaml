@@ -3,6 +3,12 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
 
+
+
+    <Style TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="{StaticResource PageBG}" />
+    </Style>
+
     <Style x:Key="SubmitButtonStyle" TargetType="Button">
         <Setter Property="HeightRequest" Value="53" />
         <Setter Property="FontSize" Value="16" />
@@ -30,7 +36,10 @@
     </Style>
 
     <Style TargetType="ActivityIndicator">
-        <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+        <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Accent}, Dark={StaticResource Accent}}" />
+        <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+        <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+        <Setter Property="IsRunning" Value="True" />
     </Style>
 
     <Style TargetType="IndicatorView">

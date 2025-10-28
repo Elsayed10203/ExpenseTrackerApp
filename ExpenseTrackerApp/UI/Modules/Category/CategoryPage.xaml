@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ExpenseTrackerApp.UI.Modules.Category.CategoryPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:catg="clr-namespace:ExpenseTrackerApp.UI.Modules.Category"
+    xmlns:icon="clr-namespace:ExpenseTrackerApp.UI.FontAwesome"
+    xmlns:trans="clr-namespace:ExpenseTrackerApp.Languages"
+    x:Name="this"
+    Title="CategoryPage"
+    Padding="0"
+    NavigationPage.HasNavigationBar="False">
+
+    <ContentPage.Resources>
+        <DataTemplate x:Key="CategoryItemTemplate">
+            <catg:CategoryTemplate BindingContext="{Binding .}">
+                <catg:CategoryTemplate.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={x:Reference this}, Path=BindingContext.SelectCategoryCommand}" CommandParameter="{Binding .}" />
+                </catg:CategoryTemplate.GestureRecognizers>
+            </catg:CategoryTemplate>
+        </DataTemplate>
+    </ContentPage.Resources>
+
+    <Grid
+        Padding="10"
+        ColumnDefinitions="*,Auto"
+        RowDefinitions="Auto,*"
+        RowSpacing="10">
+        <Label
+            Grid.Row="0"
+            Grid.Column="0"
+            FontAttributes="Bold"
+            FontSize="20"
+            HeightRequest="40"
+            HorizontalOptions="FillAndExpand"
+            Text="{x:Static trans:LanguagesResources.SelectCategory}"
+            TextColor="{StaticResource Gray600}"
+            VerticalTextAlignment="Center" />
+        <ImageButton
+            Grid.Column="1"
+            Padding="5"
+            BackgroundColor="Transparent"
+            Command="{Binding CloseCommand}"
+            VerticalOptions="Center">
+            <ImageButton.Source>
+                <FontImageSource
+                    FontFamily="FAPL"
+                    Glyph="{x:Static icon:Glyph.X}"
+                    Size="20"
+                    Color="{StaticResource Gray600}" />
+            </ImageButton.Source>
+
+        </ImageButton>
+
+        <CollectionView
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            ItemTemplate="{StaticResource CategoryItemTemplate}"
+            ItemsSource="{Binding ListCategory}"
+            SelectionMode="None" />
+    </Grid>
+
+</ContentPage>

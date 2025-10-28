@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ExpenseTrackerApp.UI.Modules.ExpenseList.ExpenseListPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:ExpenseTrackerApp.Converters"
+    xmlns:enums="clr-namespace:CommunityToolkit.Maui.Converters;assembly=CommunityToolkit.Maui"
+    xmlns:icon="clr-namespace:ExpenseTrackerApp.UI.FontAwesome"
+    xmlns:model="clr-namespace:ExpenseTrackerApp.UI.Modules.AddEditExpense"
+    xmlns:trans="clr-namespace:ExpenseTrackerApp.Languages"
+    xmlns:viewModel="clr-namespace:ExpenseTrackerApp.UI.Modules.ExpenseList"
+    xmlns:views="clr-namespace:ExpenseTrackerApp.UI.Controls"
+    x:Name="this"
+    Title="{x:Static trans:LanguagesResources.Expenses}"
+    Padding="10"
+    x:DataType="viewModel:ExpenseListPageModel"
+    BackgroundColor="{StaticResource PageBG}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Command="{Binding Source={x:Reference this}, Path=BindingContext.AddExpenseCommand}"
+            Order="Primary"
+            Text="Add">
+            <!--<ToolbarItem.IconImageSource>
+                <FontImageSource
+                    FontFamily="FAPL"
+                    Glyph="{x:Static icon:Glyph.PlusLarge}"
+                    Size="20"
+                    Color="{StaticResource Accent}" />
+            </ToolbarItem.IconImageSource>-->
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Resources>
+        <converters:LayoutStateConverter x:Key="LayoutStateConverter" />
+        <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
+
+        <DataTemplate x:Key="ExpenseItemTemplate" x:DataType="model:ExpenceUiModel">
+            <SwipeView>
+                <SwipeView.LeftItems>
+                    <SwipeItems>
+                        <SwipeItemView
+                            BackgroundColor="{StaticResource AccentOpacity}"
+                            CommandParameter="{Binding .}"
+                            WidthRequest="60">
+                            <Image
+                                HeightRequest="24"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                WidthRequest="24">
+                                <Image.Source>
+                                    <FontImageSource
+                                        FontFamily="FAPL"
+                                        Glyph="{x:Static icon:Glyph.Pencil}"
+                                        Size="20"
+                                        Color="{StaticResource MidnightBlue}" />
+                                </Image.Source>
+                            </Image>
+                        </SwipeItemView>
+                    </SwipeItems>
+                </SwipeView.LeftItems>
+                <SwipeView.RightItems>
+                    <SwipeItems>
+                        <SwipeItemView
+                            BackgroundColor="{StaticResource Gray100}"
+                            CommandParameter="{Binding .}"
+                            WidthRequest="60">
+                            <Image
+                                HeightRequest="24"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                WidthRequest="24">
+                                <Image.Source>
+                                    <FontImageSource
+                                        FontFamily="FAPL"
+                                        Glyph="{x:Static icon:Glyph.Trash}"
+                                        Size="20"
+                                        Color="{StaticResource MidnightBlue}" />
+                                </Image.Source>
+                            </Image>
+                        </SwipeItemView>
+                    </SwipeItems>
+                </SwipeView.RightItems>
+                <Border
+                    Margin="5,2"
+                    Padding="10"
+                    BackgroundColor="{AppThemeBinding Light=White,
+                                                      Dark={StaticResource Gray950}}"
+                    Stroke="{StaticResource Gray200}"
+                    StrokeShape="RoundRectangle 10">
+                    <Grid
+                        ColumnDefinitions="Auto,*,Auto"
+                        ColumnSpacing="5"
+                        RowDefinitions="Auto,Auto"
+                        RowSpacing="5">
+
+                        <Border
+                            Grid.RowSpan="2"
+                            BackgroundColor="{Binding Category.BackColor}"
+                            HeightRequest="70"
+                            HorizontalOptions="Start"
+                            StrokeShape="RoundRectangle 10"
+                            WidthRequest="70">
+                            <VerticalStackLayout
+                                HorizontalOptions="Center"
+                                Spacing="5"
+                                VerticalOptions="Center">
+                                <Image HeightRequest="30">
+                                    <Image.Source>
+                                        <FontImageSource
+                                            FontFamily="FAPL"
+                                            Glyph="{Binding Category.Icon}"
+                                            Size="30"
+                                            Color="{StaticResource White}" />
+                                    </Image.Source>
+                                </Image>
+
+                                <!--  Category Name  -->
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="14"
+                                    HorizontalTextAlignment="Center"
+                                    Text="{Binding Category.Name}"
+                                    TextColor="White" />
+                            </VerticalStackLayout>
+
+                        </Border>
+
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            FontAttributes="Bold"
+                            FontSize="Medium"
+                            Text="{Binding ExpenseDescrption}"
+                            TextColor="{AppThemeBinding Light={StaticResource PrimaryDark},
+                                                        Dark=White}" />
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            FontAttributes="Bold"
+                            FontSize="Medium"
+                            HorizontalOptions="End"
+                            Text="{Binding Amount, StringFormat='{0:C}'}"
+                            TextColor="{StaticResource Primary}" />
+
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="5,0,0,0"
+                            FontSize="Small"
+                            Text="{Binding ExpenseDate, StringFormat='{0:MMM dd, yyyy}'}"
+                            TextColor="{StaticResource MidnightBlue}"
+                            VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+            </SwipeView>
+        </DataTemplate>
+    </ContentPage.Resources>
+
+    <Grid VerticalOptions="FillAndExpand">
+        <!--  Loading  -->
+        <views:LoadingView
+            Grid.Row="1"
+            IsVisible="{Binding Currentstate, Converter={StaticResource LayoutStateConverter}, ConverterParameter={x:Static enums:LayoutState.Loading}}"
+            VerticalOptions="CenterAndExpand" />
+
+        <!--  EmptyView  -->
+        <views:EmptyView
+            Grid.Row="1"
+            IsVisible="{Binding Currentstate, Converter={StaticResource LayoutStateConverter}, ConverterParameter={x:Static enums:LayoutState.Empty}}"
+            VerticalOptions="CenterAndExpand">
+            <views:EmptyView.ImageSource>
+                <FontImageSource
+                    FontFamily="FAPL"
+                    Glyph="{x:Static icon:Glyph.Trash}"
+                    Size="80" />
+            </views:EmptyView.ImageSource>
+        </views:EmptyView>
+
+        <!--  Success  -->
+        <Grid IsVisible="{Binding Currentstate, Converter={StaticResource LayoutStateConverter}, ConverterParameter={x:Static enums:LayoutState.Success}}">
+            <CollectionView ItemTemplate="{StaticResource ExpenseItemTemplate}" ItemsSource="{Binding Expenses}" />
+        </Grid>
+
+    </Grid>
+
+
+
+
+    <!--<Grid ColumnDefinitions="*" RowDefinitions="Auto,*,Auto">
+    -->
+    <!--  Filter Section  -->
+    <!--
+        <VerticalStackLayout Grid.Row="0" Margin="10,10,10,0">
+            <Label
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Text="Filter Expenses"
+                TextColor="{AppThemeBinding Light={StaticResource PrimaryDark},
+                                            Dark=White}" />
+            <Grid
+                Margin="0,5,0,0"
+                ColumnDefinitions="*,*,Auto"
+                ColumnSpacing="10"
+                RowDefinitions="Auto,Auto,Auto"
+                RowSpacing="5">
+                <Picker
+                    Title="Select Category"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100},
+                                                      Dark={StaticResource Gray800}}"
+                    ItemsSource="{Binding Categories}"
+                    SelectedItem="{Binding SelectedCategoryFilter}"
+                    TextColor="{AppThemeBinding Light={StaticResource Gray900},
+                                                Dark={StaticResource White}}"
+                    TitleColor="{StaticResource Gray500}" />
+
+                <DatePicker
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100},
+                                                      Dark={StaticResource Gray800}}"
+                    Date="{Binding StartDateFilter, Mode=TwoWay}"
+                    Format="MM/dd/yyyy"
+                    TextColor="{AppThemeBinding Light={StaticResource Gray900},
+                                                Dark={StaticResource White}}" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Padding="12,0,0,0"
+                    IsVisible="{Binding StartDateFilter, Converter={StaticResource InvertedBoolConverter}}"
+                    Text="Start Date"
+                    TextColor="{StaticResource Gray500}"
+                    VerticalOptions="Center" />
+
+
+                <DatePicker
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100},
+                                                      Dark={StaticResource Gray800}}"
+                    Date="{Binding EndDateFilter, Mode=TwoWay}"
+                    Format="MM/dd/yyyy"
+                    TextColor="{AppThemeBinding Light={StaticResource Gray900},
+                                                Dark={StaticResource White}}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Padding="12,0,0,0"
+                    IsVisible="{Binding EndDateFilter, Converter={StaticResource InvertedBoolConverter}}"
+                    Text="End Date"
+                    TextColor="{StaticResource Gray500}"
+                    VerticalOptions="Center" />
+
+                <Button
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Grid.Column="2"
+                    BackgroundColor="{StaticResource Primary}"
+                    Command="{Binding ApplyFilterCommand}"
+                    CornerRadius="8"
+                    Text="Apply"
+                    TextColor="White"
+                    VerticalOptions="Center"
+                    WidthRequest="80" />
+                <Button
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Command="{Binding ClearFilterCommand}"
+                    HorizontalOptions="Center"
+                    Style="{StaticResource TextButton}"
+                    Text="Clear Filters"
+                    TextColor="{StaticResource Accent}" />
+            </Grid>
+            <BoxView
+                Margin="0,15,0,10"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray200},
+                                                  Dark={StaticResource Gray700}}"
+                HeightRequest="1" />
+        </VerticalStackLayout>
+
+    -->
+    <!--  Loading Indicator  -->
+    <!--
+        <ActivityIndicator
+            Grid.Row="1"
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            VerticalOptions="Center"
+            Color="{StaticResource Primary}" />
+
+    -->
+    <!--  Empty State  -->
+    <!--
+        <VerticalStackLayout
+            Grid.Row="1"
+            Margin="20"
+            HorizontalOptions="Center"
+            IsVisible="{Binding IsEmptyStateVisible}"
+            Spacing="10"
+            VerticalOptions="Center">
+            <Image
+                HeightRequest="100"
+                Source="empty_list.png"
+                WidthRequest="100" />
+            <Label
+                FontSize="Medium"
+                HorizontalOptions="Center"
+                Text="No expenses found."
+                TextColor="{AppThemeBinding Light={StaticResource PrimaryDark},
+                                            Dark=White}" />
+            <Label
+                FontSize="Small"
+                HorizontalTextAlignment="Center"
+                Text="Start tracking your spending by adding a new expense."
+                TextColor="{StaticResource Gray700}" />
+            <Button
+                Margin="0,10,0,0"
+                BackgroundColor="{StaticResource Primary}"
+                Command="{Binding AddExpenseCommand}"
+                CornerRadius="8"
+                Text="Add your first expense"
+                TextColor="White" />
+        </VerticalStackLayout>
+
+    -->
+    <!--  Expense List  -->
+    <!--
+        <RefreshView
+            Grid.Row="1"
+            Command="{Binding LoadExpensesCommand}"
+            IsRefreshing="{Binding IsBusy}"
+            IsVisible="{Binding IsEmptyStateVisible, Converter={StaticResource InvertedBoolConverter}}">
+            <CollectionView
+                ItemTemplate="{StaticResource ExpenseItemTemplate}"
+                ItemsSource="{Binding Expenses}"
+                SelectionMode="None" />
+        </RefreshView>
+
+    -->
+    <!--  Floating Action Button for Adding New Expense  -->
+    <!--
+        <Button
+            Grid.Row="2"
+            Margin="20"
+            Command="{Binding AddExpenseCommand}"
+            HorizontalOptions="End"
+            Style="{StaticResource FloatingActionButton}"
+            Text="+"
+            VerticalOptions="End" />
+    </Grid>-->
+</ContentPage>

@@ -10,8 +10,9 @@ namespace ExpenseTrackerApp
         {
             InitializeComponent();
             AppHandlers.Init();
-            var page = FreshPageModelResolver.ResolvePageModel<LoginPageModel>();
-            MainPage = new FreshNavigationContainer(page);
+          var page = FreshPageModelResolver.ResolvePageModel<LoginPageModel>();
+         //  var page = FreshPageModelResolver.ResolvePageModel<CategoryPageModel>();
+            MainPage = new FreshNavigationContainer(page);                  
         }
     }
 }

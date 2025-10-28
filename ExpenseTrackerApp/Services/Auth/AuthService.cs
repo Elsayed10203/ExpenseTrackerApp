@@ -16,9 +16,9 @@ namespace ExpenseTrackerApp.Services.Auth
         {
             try
             {
-                await Task.Delay(3000);
+                await Task.Delay(5000);
                 var jContent = JsonConvert.SerializeObject(new { Email = email, Password = pass });
-                var result = await httpProvider.PostAsync("Api/Login", new StringContent(jContent, Encoding.UTF8, "application/json"));
+                var result = await httpProvider.PostAsync("https://jsonplaceholder.typicode.com", new StringContent(jContent, Encoding.UTF8, "application/json"));
                 result.EnsureSuccessStatusCode();
                
                 //Save Token

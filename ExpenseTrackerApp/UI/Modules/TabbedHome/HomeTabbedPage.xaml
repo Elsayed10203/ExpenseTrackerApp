@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage
+    x:Class="ExpenseTrackerApp.UI.Modules.TabbedHome.HomeTabbedPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:chart="clr-namespace:ExpenseTrackerApp.UI.Modules.charts"
+    xmlns:icon="clr-namespace:ExpenseTrackerApp.UI.FontAwesome"
+    xmlns:local="clr-namespace:ExpenseTrackerApp.UI.Modules.ExpenseList"
+    xmlns:trans="clr-namespace:ExpenseTrackerApp.Languages"
+    NavigationPage.HasNavigationBar="False">
+
+    <TabbedPage.Children>
+
+        <!--  Expenses  -->
+        <!--
+        <NavigationPage Title="{x:Static trans:LanguagesResources.Expenses}">
+            <x:Arguments>
+                <local:ExpenseListPage />
+            </x:Arguments>
+            <NavigationPage.IconImageSource>
+                <FontImageSource
+                    FontFamily="FAPL"
+                    Glyph="{x:Static icon:Glyph.Wallet}"
+                    Size="15"
+                    Color="{StaticResource Accent}" />
+            </NavigationPage.IconImageSource>
+        </NavigationPage>
+
+        -->
+        <!--  Chart Tab  -->
+        <!--
+        <NavigationPage Title="{x:Static trans:LanguagesResources.Chart}">
+            <x:Arguments>
+                <chart:ChartPage />
+            </x:Arguments>
+            <NavigationPage.IconImageSource>
+                <FontImageSource
+                    FontFamily="FAPL"
+                    Glyph="{x:Static icon:Glyph.ChartBar}"
+                    Size="15"
+                    Color="{StaticResource Accent}" />
+            </NavigationPage.IconImageSource>
+
+        </NavigationPage>-->
+
+
+    </TabbedPage.Children>
+</TabbedPage>
