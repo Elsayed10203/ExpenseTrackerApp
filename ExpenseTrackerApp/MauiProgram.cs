@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui;
+﻿using Android.Content.Res;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 using ExpenseTrackerApp.Helper;
 using ExpenseTrackerApp.Services;
@@ -41,7 +42,8 @@ namespace ExpenseTrackerApp
                 })
                 .ConfigureMauiHandlers(handlers =>
                 {
-                    AppHandlers.Init();
+ 
+                  AppHandlers.Init();
                 })
                  .UseMauiCommunityToolkit(options =>
                 {

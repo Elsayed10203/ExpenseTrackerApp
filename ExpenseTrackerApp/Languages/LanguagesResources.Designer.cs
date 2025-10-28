@@ -70,6 +70,24 @@ namespace ExpenseTrackerApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to added successfully.
+        /// </summary>
+        internal static string addedSuccessfully {
+            get {
+                return ResourceManager.GetString("addedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Amount.
+        /// </summary>
+        internal static string Amount {
+            get {
+                return ResourceManager.GetString("Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chart.
         /// </summary>
         internal static string Chart {
@@ -79,11 +97,38 @@ namespace ExpenseTrackerApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Descrption.
+        /// </summary>
+        internal static string Descrption {
+            get {
+                return ResourceManager.GetString("Descrption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        internal static string Edit {
+            get {
+                return ResourceManager.GetString("Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email.
         /// </summary>
         internal static string Email {
             get {
                 return ResourceManager.GetString("Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error Occurred.
+        /// </summary>
+        internal static string erroroccurred {
+            get {
+                return ResourceManager.GetString("erroroccurred", resourceCulture);
             }
         }
         
@@ -142,6 +187,42 @@ namespace ExpenseTrackerApp.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        internal static string Remove {
+            get {
+                return ResourceManager.GetString("Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removed Successfully.
+        /// </summary>
+        internal static string RemovedSuccessfully {
+            get {
+                return ResourceManager.GetString("RemovedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Expense.
+        /// </summary>
+        internal static string SaveExpense {
+            get {
+                return ResourceManager.GetString("SaveExpense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search For .....
+        /// </summary>
+        internal static string SearchFor {
+            get {
+                return ResourceManager.GetString("SearchFor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select an Expense Category.
         /// </summary>
         internal static string SelectCategory {
@@ -156,6 +237,15 @@ namespace ExpenseTrackerApp.Languages {
         internal static string SignIn {
             get {
                 return ResourceManager.GetString("SignIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to updated successfully.
+        /// </summary>
+        internal static string updatedSuccessfully {
+            get {
+                return ResourceManager.GetString("updatedSuccessfully", resourceCulture);
             }
         }
     }

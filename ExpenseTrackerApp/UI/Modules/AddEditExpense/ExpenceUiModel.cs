@@ -13,10 +13,11 @@ namespace ExpenseTrackerApp.UI.Modules.AddEditExpense
             {
                 if (category == value) return;
                 category = value;
+                CheckValid();
                 RaisePropertyChanged();
             }
-        }  
-
+        }
+        public Guid ? Id { get; set; }
         private string expenseDescrption;
         public string ExpenseDescrption
         {
@@ -25,6 +26,7 @@ namespace ExpenseTrackerApp.UI.Modules.AddEditExpense
             {
                 if (expenseDescrption == value) return;
                 expenseDescrption = value;
+                CheckValid();
                 RaisePropertyChanged();
             }
         }
@@ -36,6 +38,7 @@ namespace ExpenseTrackerApp.UI.Modules.AddEditExpense
             {
                 if (amount == value) return;
                 amount = value;
+                CheckValid();
                 RaisePropertyChanged();
             }
         }
@@ -48,6 +51,23 @@ namespace ExpenseTrackerApp.UI.Modules.AddEditExpense
                 if (expenseDate == value) return;
                 expenseDate = value;
                 RaisePropertyChanged();
+            }
+        }
+
+        private void CheckValid()
+        {
+            IsValid = !string.IsNullOrWhiteSpace(ExpenseDescrption) && Amount > 0 && Category != null;  
+        }
+
+        private bool isValid;   
+        public bool IsValid
+        {
+            get=> isValid;
+            set
+            {
+                if (isValid == value) return;
+                isValid = value;
+                RaisePropertyChanged(); 
             }
         }
     }

@@ -4,11 +4,20 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:catg="clr-namespace:ExpenseTrackerApp.UI.Modules.Category"
+    xmlns:converters="clr-namespace:ExpenseTrackerApp.Converters"
+    xmlns:icon="clr-namespace:ExpenseTrackerApp.UI.FontAwesome"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:trans="clr-namespace:ExpenseTrackerApp.Languages"
     xmlns:viewModel="clr-namespace:ExpenseTrackerApp.UI.Modules.AddEditExpense"
     x:Name="this"
+    Title="{Binding Title}"
     x:DataType="viewModel:AddEditExpensePageModel"
     BackgroundColor="{StaticResource PageBG}"
-    NavigationPage.HasNavigationBar="False">
+    NavigationPage.HasNavigationBar="True">
+    <ContentPage.Resources>
+        <converters:BoolInverseConverter x:Key="BoolInverseConverter" />
+    </ContentPage.Resources>
+
     <ContentPage.Content>
         <ScrollView>
             <Grid>
@@ -20,42 +29,105 @@
                             FontAttributes="Bold"
                             FontSize="20"
                             HorizontalOptions="FillAndExpand"
-                            Text="Add Expense"
+                            Text="{Binding Title}"
                             TextColor="{StaticResource Gray600}" />
 
-                        <catg:CategoryTemplate
-                            BindingContext="{Binding ExpenceItem.Category}"
-                            HeightRequest="100"
-                            WidthRequest="100">
-                            <catg:CategoryTemplate.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={x:Reference this}, Path=BindingContext.CancelCommand}" />
-                            </catg:CategoryTemplate.GestureRecognizers>
-                        </catg:CategoryTemplate>
+                        <StackLayout>
+                            <catg:CategoryTemplate
+                                BindingContext="{Binding ExpenceItem.Category}"
+                                HeightRequest="100"
+                                WidthRequest="100">
+
+                                <catg:CategoryTemplate.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference this}, Path=BindingContext.CategoryTapeCommand}" CommandParameter="{Binding Source={x:Reference pck}}" />
+                                </catg:CategoryTemplate.GestureRecognizers>
+                            </catg:CategoryTemplate>
+                            <Picker
+                                x:Name="pck"
+                                Title="changeHere"
+                                FontAttributes="Bold"
+                                HorizontalOptions="Center"
+                                HorizontalTextAlignment="Center"
+                                IsVisible="{Binding IsEditMode}"
+                                ItemDisplayBinding="{Binding Name}"
+                                ItemsSource="{Binding Categories}"
+                                SelectedItem="{Binding ExpenceItem.Category, Mode=TwoWay}"
+                                VerticalOptions="Center">
+                                <!--<Picker.Behaviors>
+        <toolkit:EventToCommandBehavior Command="{Binding IndexChangedCommand}" EventName="SelectedIndexChanged" />
+    </Picker.Behaviors>-->
+                            </Picker>
+                        </StackLayout>
                     </StackLayout>
 
                     <VerticalStackLayout Spacing="25">
-                        <Entry
-                            x:Name="AmountEntry"
-                            HorizontalOptions="FillAndExpand"
-                            Keyboard="Numeric"
-                            Placeholder="Amount"
-                            Text="{Binding ExpenceItem.Amount}"
-                            Visual="Material" />
-                        <Editor
-                            x:Name="TitleEntry"
-                            Placeholder="Descrption"
-                            Text="{Binding ExpenceItem.ExpenseDescrption}" />
+                        <Border
+                            Padding="7"
+                            BackgroundColor="White"
+                            StrokeShape="RoundRectangle 12">
+                            <StackLayout Margin="7,2,7,2" Orientation="Horizontal">
+                                <Entry
+                                    x:Name="AmountEntry"
+                                    HorizontalOptions="FillAndExpand"
+                                    Keyboard="Numeric"
+                                    Placeholder="Amount"
+                                    Text="{Binding ExpenceItem.Amount}"
+                                    Visual="Material" />
 
-                        <DatePicker
-                            x:Name="DatePicker"
-                            Date="{Binding ExpenceItem.ExpenseDate}"
-                            Format="dd/MM/yyyy" />
+                                <Image BackgroundColor="Transparent">
+                                    <Image.Source>
+                                        <FontImageSource
+                                            FontFamily="FAPL"
+                                            Glyph="{x:Static icon:Glyph.MoneyBill}"
+                                            Size="25"
+                                            Color="{StaticResource Accent}" />
+                                    </Image.Source>
+                                </Image>
+
+                            </StackLayout>
+                        </Border>
+
+                        <Border
+                            BackgroundColor="{StaticResource White}"
+                            HeightRequest="85"
+                            StrokeShape="RoundRectangle 12">
+                            <Editor
+                                x:Name="TitleEntry"
+                                Margin="10"
+                                Placeholder="Descrption"
+                                Text="{Binding ExpenceItem.ExpenseDescrption}" />
+                        </Border>
+
+
+                        <Border BackgroundColor="{StaticResource White}">
+                            <DatePicker
+                                x:Name="DatePicker"
+                                Margin="10"
+                                Date="{Binding ExpenceItem.ExpenseDate}"
+                                Format="dd/MM/yyyy" />
+                        </Border>
                     </VerticalStackLayout>
                     <Button
                         x:Name="SaveButton"
-                        Command="{Binding AddCommand}"
+                        Command="{Binding AddEditCommand}"
+                        IsEnabled="{Binding ExpenceItem.IsValid}"
                         Style="{StaticResource SubmitButtonStyle}"
-                        Text="Save Expense" />
+                        Text="Save Expense">
+                        <Button.Triggers>
+                            <DataTrigger
+                                Binding="{Binding IsEditMode}"
+                                TargetType="Button"
+                                Value="True">
+                                <Setter Property="Text" Value="{x:Static trans:LanguagesResources.Edit}" />
+                            </DataTrigger>
+                            <DataTrigger
+                                Binding="{Binding IsEditMode}"
+                                TargetType="Button"
+                                Value="false">
+                                <Setter Property="Text" Value="{x:Static trans:LanguagesResources.add}" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
                 </StackLayout>
                 <ActivityIndicator
                     IsRunning="True"

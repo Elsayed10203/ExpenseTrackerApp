@@ -56,7 +56,7 @@
             Grid.Row="1"
             Grid.ColumnSpan="2"
             ItemTemplate="{StaticResource CategoryItemTemplate}"
-            ItemsSource="{Binding ListCategory}"
+            ItemsSource="{Binding Categories}"
             SelectionMode="None" />
     </Grid>
 

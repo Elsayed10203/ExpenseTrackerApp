@@ -130,4 +130,34 @@
   <data name="NoDataMsg" xml:space="preserve">
     <value>No data found</value>
   </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="SearchFor" xml:space="preserve">
+    <value>Search For ....</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="Descrption" xml:space="preserve">
+    <value>Descrption</value>
+  </data>
+  <data name="SaveExpense" xml:space="preserve">
+    <value>Save Expense</value>
+  </data>
+  <data name="addedSuccessfully" xml:space="preserve">
+    <value>added successfully</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="updatedSuccessfully" xml:space="preserve">
+    <value>updated successfully</value>
+  </data>
+  <data name="RemovedSuccessfully" xml:space="preserve">
+    <value>Removed Successfully</value>
+  </data>
+  <data name="erroroccurred" xml:space="preserve">
+    <value>Error Occurred</value>
+  </data>
 </root>

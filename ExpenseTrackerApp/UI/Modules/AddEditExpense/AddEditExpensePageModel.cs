@@ -6,19 +6,20 @@ using ExpenseTrackerApp.UI.Modules.Category;
 
 namespace ExpenseTrackerApp.UI.Modules.AddEditExpense
 {
-  public class AddEditExpensePageModel : BasePageModel
+    public class AddEditExpensePageModel : BaseCategoryPageModel
     {
         IExpenseService expenseService;
         public AddEditExpensePageModel(IExpenseService expenseService)
         {
-            this.expenseService = expenseService;   
-            AddCommand = new AsyncRelayCommand(()=>ExecuteAddCommand(), canExecute: () => true, AsyncRelayCommandOptions.None);
+            this.expenseService = expenseService;
+            AddEditCommand = new AsyncRelayCommand(() => ExecuteAddCommand(), canExecute: () => true, AsyncRelayCommandOptions.None);
             CancelCommand = new RelayCommand(ExecuteCancelCommand);
-         }
+            CategoryTapeCommand = new RelayCommand<object>(ExecuteCategoryTapeCommand);
+        }
 
         #region Properties 
 
-        private ExpenceUiModel expenceItem=new ExpenceUiModel();
+        private ExpenceUiModel expenceItem = new ExpenceUiModel();
         public ExpenceUiModel ExpenceItem
         {
             get => expenceItem;
@@ -28,64 +29,107 @@ namespace ExpenseTrackerApp.UI.Modules.AddEditExpense
                 RaisePropertyChanged();
             }
         }
+
+        private bool isEditMode = false;
+        public bool IsEditMode
+        {
+            get => isEditMode;
+            set
+            {
+                isEditMode = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
         #endregion
 
         #region Commands
-        public IRelayCommand AddCommand { get; set; }
+        public IRelayCommand AddEditCommand { get; set; }
         public IRelayCommand CancelCommand { get; set; }
+        public IRelayCommand CategoryTapeCommand { get; set; }
         #endregion
+
+
+        private void ExecuteCategoryTapeCommand(object item)
+        {
+            if (!IsEditMode)
+            {
+                CancelCommand.Execute(null);
+            }
+            else
+            {
+                if (item is Picker pcker)
+                    pcker.Focus();
+            }
+        }
         private async void ExecuteCancelCommand()
         {
-             await CoreMethods.PopPageModel();  
+            await CoreMethods.PopPageModel();
         }
 
         private async Task ExecuteAddCommand()
         {
             IsBusy = true;
-            var expenseDTO = MapUiModelToExpence(ExpenceItem);  // Map UI model to DTO   
+            var isUpdate = ExpenceItem.Id.HasValue;
 
-            var res= await expenseService?.AddExpenseAsync(expenseDTO);
+            var expenseDTO = MapUiModelToExpence(ExpenceItem);  // Map UI model to DTO   
+            if (!isUpdate)
+                await expenseService?.AddExpenseAsync(expenseDTO);
+            else
+                await expenseService?.UpdateExpenseAsync(expenseDTO);
             IsBusy = false;
 
-            ShowToaster.show("added successfully....");  
+            ShowToaster.show(Languages.LanguagesResources.addedSuccessfully);
 
-            await CoreMethods.PopToRoot(false);   
+            await CoreMethods.PopToRoot(false);
         }
 
-        private  ExpenseModel MapUiModelToExpence(ExpenceUiModel expenceUiModel)
+        private ExpenseModel MapUiModelToExpence(ExpenceUiModel expenceUiModel)
         {
-            if (expenceUiModel == null)
-                throw new ArgumentNullException(nameof(expenceUiModel));
-
             return new ExpenseModel
             {
-                Id = Guid.NewGuid(),
+                Id = expenceUiModel.Id ?? Guid.NewGuid(),
                 Amount = expenceUiModel.Amount,
-                CategoryId = expenceUiModel.Category != null ? expenceUiModel.Category.CatId : 0,
+                CategoryId = expenceUiModel.Category?.CatId ?? 0,
                 Date = expenceUiModel.ExpenseDate,
                 Description = expenceUiModel.ExpenseDescrption
             };
         }
 
- 
+
         public override void Init(object initData)
         {
             try
             {
                 if (initData == null || !(initData is NavParams navParams) || navParams.Count < 1)
                     return;
-               // ExpenceUiModel = new ExpenceUiModel();
+                // ExpenceUiModel = new ExpenceUiModel();
 
-                if (navParams.ContainsKey("categ-item") && navParams["categ-item"] is CategoryUiModel ItemModel)
+                if (navParams.ContainsKey("categ-item") && navParams["categ-item"] is CategoryUiModel itemCateg)
                 {
-                   if(ExpenceItem != null)
-                        ExpenceItem.Category = (ItemModel as CategoryUiModel);
+                    if (ExpenceItem != null)
+                        ExpenceItem.Category = (itemCateg as CategoryUiModel);
+                    Categories.FirstOrDefault(c => c.CatId == itemCateg.CatId).IsSelected = true;
+                    IsEditMode = false;
+                    this.Title = $"{Languages.LanguagesResources.add} {Languages.LanguagesResources.Expenses}";
                 }
+
+
+                if (navParams.ContainsKey("expence-item") && navParams["expence-item"] is ExpenceUiModel itemExpen)
+                {
+                    if (ExpenceItem != null)
+                        ExpenceItem = (itemExpen as ExpenceUiModel);
+                    IsEditMode = true;
+                    this.Title = $"{Languages.LanguagesResources.Edit} {Languages.LanguagesResources.Expenses}";
+
+                }
+
             }
             catch (Exception)
             {
 
-               
+
             }
             base.Init(initData);
         }

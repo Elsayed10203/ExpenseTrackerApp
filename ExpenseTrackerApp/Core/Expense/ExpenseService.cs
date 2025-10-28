@@ -14,15 +14,15 @@ namespace ExpenseTrackerApp.Services.Expense
             this.cacheService = cacheService;
         }
 
-        public async Task<ObservableCollection<ExpenseModel>> GetExpensesAsync()
+        public async Task<List<ExpenseModel>> GetExpensesAsync()
         {
             await Task.Delay(TimeSpan.FromMilliseconds(400)); // Simulate network delay
-            var result = await httpProvider.GetAsync("https://jsonplaceholder.typicode.com/posts"); // Placeholder for actual API call
+          //  var result = await httpProvider.GetAsync("https://jsonplaceholder.typicode.com/posts"); // Placeholder for actual API call
 
 
             var res = await cacheService.GetAsync<List<ExpenseModel>>(cacheKey);
-            if (res != null) return new ObservableCollection<ExpenseModel>(res);
-            else return new ObservableCollection<ExpenseModel>();
+            if (res != null) return res;
+            else return new List<ExpenseModel>();
 
             /*
             var conten = await result.Content.ReadAsStringAsync();
@@ -47,7 +47,7 @@ namespace ExpenseTrackerApp.Services.Expense
                 expense.Id = Guid.NewGuid();
 
                 await Task.Delay(TimeSpan.FromMilliseconds(400)); // Simulate network delay
-                var result = await httpProvider.GetAsync("https://jsonplaceholder.typicode.com/postss"); // Placeholder for actual API call
+         //       var result = await httpProvider.GetAsync("https://jsonplaceholder.typicode.com/postss"); // Placeholder for actual API call
 
                 var listexpense = await cacheService.GetAsync<List<ExpenseModel>>(cacheKey);
 
@@ -71,7 +71,7 @@ namespace ExpenseTrackerApp.Services.Expense
         public async Task DeleteExpenseAsync(Guid id)
         {
             await Task.Delay(TimeSpan.FromMilliseconds(400)); // Simulate network delay
-            var result = await httpProvider.GetAsync("https://jsonplaceholder.typicode.com/posts/Remove"); // Placeholder for actual API call
+         //   var result = await httpProvider.GetAsync("https://jsonplaceholder.typicode.com/posts/Remove"); // Placeholder for actual API call
 
             var listexpense = await cacheService.GetAsync<List<ExpenseModel>>(cacheKey);
             var itm = listexpense.FirstOrDefault(x => x.Id == id);
@@ -83,7 +83,7 @@ namespace ExpenseTrackerApp.Services.Expense
         public async Task UpdateExpenseAsync(ExpenseModel expense)
         {
             await Task.Delay(TimeSpan.FromMilliseconds(400)); // Simulate network delay
-            var result = await httpProvider.GetAsync("https://jsonplaceholder.typicode.com/postsUpdate"); // Placeholder for actual API call
+           // var result = await httpProvider.GetAsync("https://jsonplaceholder.typicode.com/postsUpdate"); // Placeholder for actual API call
 
             var listexpense = await cacheService.GetAsync<List<ExpenseModel>>(cacheKey);
             var index = listexpense.FindIndex(x => x.Id == expense.Id);

@@ -3,6 +3,7 @@
     x:Class="ExpenseTrackerApp.UI.Modules.ExpenseList.ExpenseListPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:categ="clr-namespace:ExpenseTrackerApp.UI.Modules.Category"
     xmlns:converters="clr-namespace:ExpenseTrackerApp.Converters"
     xmlns:enums="clr-namespace:CommunityToolkit.Maui.Converters;assembly=CommunityToolkit.Maui"
     xmlns:icon="clr-namespace:ExpenseTrackerApp.UI.FontAwesome"
@@ -17,23 +18,13 @@
     BackgroundColor="{StaticResource PageBG}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem
-            Command="{Binding Source={x:Reference this}, Path=BindingContext.AddExpenseCommand}"
-            Order="Primary"
-            Text="Add">
-            <!--<ToolbarItem.IconImageSource>
-                <FontImageSource
-                    FontFamily="FAPL"
-                    Glyph="{x:Static icon:Glyph.PlusLarge}"
-                    Size="20"
-                    Color="{StaticResource Accent}" />
-            </ToolbarItem.IconImageSource>-->
-        </ToolbarItem>
+        <ToolbarItem Order="Primary" Text="{Binding TotalCount}" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Resources>
         <converters:LayoutStateConverter x:Key="LayoutStateConverter" />
         <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
+        <converters:CollectionCountConverter x:Key="CollectionCountConverter" />
 
         <DataTemplate x:Key="ExpenseItemTemplate" x:DataType="model:ExpenceUiModel">
             <SwipeView>
@@ -41,21 +32,23 @@
                     <SwipeItems>
                         <SwipeItemView
                             BackgroundColor="{StaticResource AccentOpacity}"
+                            Command="{Binding Source={x:Reference this}, Path=BindingContext.EditExpenseCommand}"
                             CommandParameter="{Binding .}"
                             WidthRequest="60">
-                            <Image
+                            <ImageButton
+                                BackgroundColor="Transparent"
                                 HeightRequest="24"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center"
                                 WidthRequest="24">
-                                <Image.Source>
+                                <ImageButton.Source>
                                     <FontImageSource
                                         FontFamily="FAPL"
                                         Glyph="{x:Static icon:Glyph.Pencil}"
                                         Size="20"
                                         Color="{StaticResource MidnightBlue}" />
-                                </Image.Source>
-                            </Image>
+                                </ImageButton.Source>
+                            </ImageButton>
                         </SwipeItemView>
                     </SwipeItems>
                 </SwipeView.LeftItems>
@@ -63,21 +56,23 @@
                     <SwipeItems>
                         <SwipeItemView
                             BackgroundColor="{StaticResource Gray100}"
+                            Command="{Binding Source={x:Reference this}, Path=BindingContext.DeleteExpenseCommand}"
                             CommandParameter="{Binding .}"
                             WidthRequest="60">
-                            <Image
+                            <ImageButton
+                                BackgroundColor="Transparent"
                                 HeightRequest="24"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center"
                                 WidthRequest="24">
-                                <Image.Source>
+                                <ImageButton.Source>
                                     <FontImageSource
                                         FontFamily="FAPL"
                                         Glyph="{x:Static icon:Glyph.Trash}"
                                         Size="20"
                                         Color="{StaticResource MidnightBlue}" />
-                                </Image.Source>
-                            </Image>
+                                </ImageButton.Source>
+                            </ImageButton>
                         </SwipeItemView>
                     </SwipeItems>
                 </SwipeView.RightItems>
@@ -102,15 +97,16 @@
                             StrokeShape="RoundRectangle 10"
                             WidthRequest="70">
                             <VerticalStackLayout
+                                Padding="5"
                                 HorizontalOptions="Center"
-                                Spacing="5"
+                                Spacing="2"
                                 VerticalOptions="Center">
-                                <Image HeightRequest="30">
+                                <Image HeightRequest="25">
                                     <Image.Source>
                                         <FontImageSource
                                             FontFamily="FAPL"
                                             Glyph="{Binding Category.Icon}"
-                                            Size="30"
+                                            Size="20"
                                             Color="{StaticResource White}" />
                                     </Image.Source>
                                 </Image>
@@ -118,7 +114,7 @@
                                 <!--  Category Name  -->
                                 <Label
                                     FontAttributes="Bold"
-                                    FontSize="14"
+                                    FontSize="12"
                                     HorizontalTextAlignment="Center"
                                     Text="{Binding Category.Name}"
                                     TextColor="White" />
@@ -130,7 +126,7 @@
                             Grid.Row="0"
                             Grid.Column="1"
                             FontAttributes="Bold"
-                            FontSize="Medium"
+                            FontSize="Small"
                             Text="{Binding ExpenseDescrption}"
                             TextColor="{AppThemeBinding Light={StaticResource PrimaryDark},
                                                         Dark=White}" />
@@ -141,7 +137,7 @@
                             FontSize="Medium"
                             HorizontalOptions="End"
                             Text="{Binding Amount, StringFormat='{0:C}'}"
-                            TextColor="{StaticResource Primary}" />
+                            TextColor="{StaticResource Gray400}" />
 
                         <Label
                             Grid.Row="1"
@@ -158,6 +154,7 @@
     </ContentPage.Resources>
 
     <Grid VerticalOptions="FillAndExpand">
+
         <!--  Loading  -->
         <views:LoadingView
             Grid.Row="1"
@@ -173,183 +170,125 @@
                 <FontImageSource
                     FontFamily="FAPL"
                     Glyph="{x:Static icon:Glyph.Trash}"
-                    Size="80" />
+                    Size="80"
+                    Color="{StaticResource Gray900}" />
             </views:EmptyView.ImageSource>
         </views:EmptyView>
 
         <!--  Success  -->
-        <Grid IsVisible="{Binding Currentstate, Converter={StaticResource LayoutStateConverter}, ConverterParameter={x:Static enums:LayoutState.Success}}">
-            <CollectionView ItemTemplate="{StaticResource ExpenseItemTemplate}" ItemsSource="{Binding Expenses}" />
+        <Grid
+            IsVisible="{Binding Currentstate, Converter={StaticResource LayoutStateConverter}, ConverterParameter={x:Static enums:LayoutState.Success}}"
+            RowDefinitions="Auto,*"
+            RowSpacing="5">
+
+            <!--  Filter  -->
+            <CollectionView ItemsSource="{Binding Categories}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border
+                            Margin="4"
+                            x:DataType="categ:CategoryUiModel"
+                            HeightRequest="35"
+                            Stroke="Transparent"
+                            StrokeShape="RoundRectangle 7"
+                            StrokeThickness="2">
+
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={x:Reference this}, Path=BindingContext.SelectCategoryCommand}" CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Border.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding IsSelected}"
+                                    TargetType="Border"
+                                    Value="true">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource Accent}" />
+                                </DataTrigger>
+                                <DataTrigger
+                                    Binding="{Binding IsSelected}"
+                                    TargetType="Border"
+                                    Value="false">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Label
+                                Padding="10,5,10,5"
+                                Text="{Binding Name}"
+                                TextColor="{StaticResource Accent}">
+                                <Label.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding IsSelected}"
+                                        TargetType="Label"
+                                        Value="true">
+                                        <Setter Property="TextColor" Value="{StaticResource White}" />
+                                    </DataTrigger>
+                                    <DataTrigger
+                                        Binding="{Binding IsSelected}"
+                                        TargetType="Label"
+                                        Value="false">
+                                        <Setter Property="TextColor" Value="{StaticResource Accent}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <RefreshView
+                Grid.Row="1"
+                Command="{Binding RefreshCommand}"
+                IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}"
+                RefreshColor="{StaticResource Accent}">
+                <CollectionView ItemTemplate="{StaticResource ExpenseItemTemplate}" ItemsSource="{Binding Expenses}" />
+            </RefreshView>
+            <StackLayout
+                Grid.Row="1"
+                Spacing="5"
+                VerticalOptions="CenterAndExpand">
+                <Label
+                    x:Name="lblReload"
+                    Grid.Row="1"
+                    HorizontalOptions="Center"
+                    IsVisible="{Binding Expenses.Count, Converter={StaticResource CollectionCountConverter}}"
+                    Text="Press To Reload"
+                    VerticalOptions="Center" />
+                <ImageButton
+                    BackgroundColor="Transparent"
+                    Command="{Binding RefreshCommand}"
+                    IsVisible="{Binding Source={x:Reference lblReload}, Path=IsVisible}">
+                    <ImageButton.Source>
+                        <FontImageSource
+                            FontFamily="FAPL"
+                            Glyph="{x:Static icon:Glyph.Rotate}"
+                            Size="20"
+                            Color="{StaticResource Accent}" />
+                    </ImageButton.Source>
+                </ImageButton>
+            </StackLayout>
         </Grid>
+
+        <ImageButton
+            Grid.Row="2"
+            Margin="20"
+            Padding="5"
+            Command="{Binding AddExpenseCommand}"
+            CornerRadius="15"
+            HeightRequest="50"
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            WidthRequest="50">
+            <ImageButton.Source>
+                <FontImageSource
+                    FontFamily="FAPL"
+                    Glyph="{x:Static icon:Glyph.CirclePlus}"
+                    Size="18"
+                    Color="{StaticResource Accent}" />
+            </ImageButton.Source>
+        </ImageButton>
 
     </Grid>
 
-
-
-
-    <!--<Grid ColumnDefinitions="*" RowDefinitions="Auto,*,Auto">
-    -->
-    <!--  Filter Section  -->
-    <!--
-        <VerticalStackLayout Grid.Row="0" Margin="10,10,10,0">
-            <Label
-                FontAttributes="Bold"
-                FontSize="Medium"
-                Text="Filter Expenses"
-                TextColor="{AppThemeBinding Light={StaticResource PrimaryDark},
-                                            Dark=White}" />
-            <Grid
-                Margin="0,5,0,0"
-                ColumnDefinitions="*,*,Auto"
-                ColumnSpacing="10"
-                RowDefinitions="Auto,Auto,Auto"
-                RowSpacing="5">
-                <Picker
-                    Title="Select Category"
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100},
-                                                      Dark={StaticResource Gray800}}"
-                    ItemsSource="{Binding Categories}"
-                    SelectedItem="{Binding SelectedCategoryFilter}"
-                    TextColor="{AppThemeBinding Light={StaticResource Gray900},
-                                                Dark={StaticResource White}}"
-                    TitleColor="{StaticResource Gray500}" />
-
-                <DatePicker
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100},
-                                                      Dark={StaticResource Gray800}}"
-                    Date="{Binding StartDateFilter, Mode=TwoWay}"
-                    Format="MM/dd/yyyy"
-                    TextColor="{AppThemeBinding Light={StaticResource Gray900},
-                                                Dark={StaticResource White}}" />
-                <Label
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Padding="12,0,0,0"
-                    IsVisible="{Binding StartDateFilter, Converter={StaticResource InvertedBoolConverter}}"
-                    Text="Start Date"
-                    TextColor="{StaticResource Gray500}"
-                    VerticalOptions="Center" />
-
-
-                <DatePicker
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100},
-                                                      Dark={StaticResource Gray800}}"
-                    Date="{Binding EndDateFilter, Mode=TwoWay}"
-                    Format="MM/dd/yyyy"
-                    TextColor="{AppThemeBinding Light={StaticResource Gray900},
-                                                Dark={StaticResource White}}" />
-                <Label
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Padding="12,0,0,0"
-                    IsVisible="{Binding EndDateFilter, Converter={StaticResource InvertedBoolConverter}}"
-                    Text="End Date"
-                    TextColor="{StaticResource Gray500}"
-                    VerticalOptions="Center" />
-
-                <Button
-                    Grid.Row="0"
-                    Grid.RowSpan="2"
-                    Grid.Column="2"
-                    BackgroundColor="{StaticResource Primary}"
-                    Command="{Binding ApplyFilterCommand}"
-                    CornerRadius="8"
-                    Text="Apply"
-                    TextColor="White"
-                    VerticalOptions="Center"
-                    WidthRequest="80" />
-                <Button
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Command="{Binding ClearFilterCommand}"
-                    HorizontalOptions="Center"
-                    Style="{StaticResource TextButton}"
-                    Text="Clear Filters"
-                    TextColor="{StaticResource Accent}" />
-            </Grid>
-            <BoxView
-                Margin="0,15,0,10"
-                BackgroundColor="{AppThemeBinding Light={StaticResource Gray200},
-                                                  Dark={StaticResource Gray700}}"
-                HeightRequest="1" />
-        </VerticalStackLayout>
-
-    -->
-    <!--  Loading Indicator  -->
-    <!--
-        <ActivityIndicator
-            Grid.Row="1"
-            HorizontalOptions="Center"
-            IsRunning="{Binding IsBusy}"
-            IsVisible="{Binding IsBusy}"
-            VerticalOptions="Center"
-            Color="{StaticResource Primary}" />
-
-    -->
-    <!--  Empty State  -->
-    <!--
-        <VerticalStackLayout
-            Grid.Row="1"
-            Margin="20"
-            HorizontalOptions="Center"
-            IsVisible="{Binding IsEmptyStateVisible}"
-            Spacing="10"
-            VerticalOptions="Center">
-            <Image
-                HeightRequest="100"
-                Source="empty_list.png"
-                WidthRequest="100" />
-            <Label
-                FontSize="Medium"
-                HorizontalOptions="Center"
-                Text="No expenses found."
-                TextColor="{AppThemeBinding Light={StaticResource PrimaryDark},
-                                            Dark=White}" />
-            <Label
-                FontSize="Small"
-                HorizontalTextAlignment="Center"
-                Text="Start tracking your spending by adding a new expense."
-                TextColor="{StaticResource Gray700}" />
-            <Button
-                Margin="0,10,0,0"
-                BackgroundColor="{StaticResource Primary}"
-                Command="{Binding AddExpenseCommand}"
-                CornerRadius="8"
-                Text="Add your first expense"
-                TextColor="White" />
-        </VerticalStackLayout>
-
-    -->
-    <!--  Expense List  -->
-    <!--
-        <RefreshView
-            Grid.Row="1"
-            Command="{Binding LoadExpensesCommand}"
-            IsRefreshing="{Binding IsBusy}"
-            IsVisible="{Binding IsEmptyStateVisible, Converter={StaticResource InvertedBoolConverter}}">
-            <CollectionView
-                ItemTemplate="{StaticResource ExpenseItemTemplate}"
-                ItemsSource="{Binding Expenses}"
-                SelectionMode="None" />
-        </RefreshView>
-
-    -->
-    <!--  Floating Action Button for Adding New Expense  -->
-    <!--
-        <Button
-            Grid.Row="2"
-            Margin="20"
-            Command="{Binding AddExpenseCommand}"
-            HorizontalOptions="End"
-            Style="{StaticResource FloatingActionButton}"
-            Text="+"
-            VerticalOptions="End" />
-    </Grid>-->
 </ContentPage>

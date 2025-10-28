@@ -5,12 +5,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="ChartPage"
     BackgroundColor="{StaticResource PageBG}">
-    <VerticalStackLayout VerticalOptions="FillAndExpand">
-        <Label HorizontalOptions="Center" Text="Its Chart Page Í☺☻♥" />
-        <Label HorizontalOptions="Center" Text="Its Chart Page Í☺☻♥" />
-        <Label HorizontalOptions="Center" Text="Its Chart Page Í☺☻♥" />
-        <Label HorizontalOptions="Center" Text="Its Chart Page Í☺☻♥" />
-        <Label HorizontalOptions="Center" Text="Its Chart Page Í☺☻♥" />
-        <Label HorizontalOptions="Center" Text="Its Chart Page Í☺☻♥" />
-    </VerticalStackLayout>
+    <!--<CollectionView ItemsSource="{Binding Expenses}">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Label Text="{Binding .}" />
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>-->
 </ContentPage>

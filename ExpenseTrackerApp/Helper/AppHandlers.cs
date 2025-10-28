@@ -1,7 +1,8 @@
 ﻿#if ANDROID
 using Android.App;
 using Android.Content;
- using Microsoft.Maui.Controls.Compatibility.Platform.Android;
+using Android.Content.Res;
+using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 using Microsoft.Maui.Platform;
 #endif
 #if IOS
@@ -16,6 +17,7 @@ namespace ExpenseTrackerApp.Helper
         {
             Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("MyCustomization", (handler, view) =>
             {
+
 #if ANDROID
                 handler.PlatformView.SetPadding(0, 0, 0, 0);
                 handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
@@ -29,10 +31,22 @@ namespace ExpenseTrackerApp.Helper
 #endif
             });
 
-            //EditorHandler
-            Microsoft.Maui.Handlers.EditorHandler.Mapper.AppendToMapping("MyCustomization", (handler, view) =>
+
+
+
+            Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping(nameof(Entry), (handler, view) =>
             {
 #if ANDROID
+                handler.PlatformView.BackgroundTintList = ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
+#endif
+            });
+
+            //EditorHandler
+            Microsoft.Maui.Handlers.EditorHandler.Mapper.AppendToMapping(nameof(Editor), (handler, view) =>
+            {
+#if ANDROID
+                handler.PlatformView.BackgroundTintList = ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
+
                 handler.PlatformView.SetPadding(0, 0, 0, 0);
                 handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
                 handler.PlatformView.SetSelectAllOnFocus(true);

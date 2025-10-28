@@ -90,7 +90,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Services\Expense\FirstContentPage.xaml">
+	  <MauiXaml Update="Core\Expense\FirstContentPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="UI\Controls\EmptyView.xaml">
