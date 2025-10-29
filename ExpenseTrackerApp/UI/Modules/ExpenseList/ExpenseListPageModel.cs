@@ -25,7 +25,7 @@ namespace ExpenseTrackerApp.UI.Modules.ExpenseList
             AddExpenseCommand = new AsyncRelayCommand(GoToAddExpensePage);
             EditExpenseCommand = new AsyncRelayCommand<ExpenceUiModel>(GoToEditExpensePage);
             DeleteExpenseCommand = new AsyncRelayCommand<ExpenceUiModel>(DeleteExpenseAsync);
-             SelectCategoryCommand = new AsyncRelayCommand<CategoryUiModel>(ExecuteSelectCategoryCommand);
+            SelectCategoryCommand = new AsyncRelayCommand<CategoryUiModel>(ExecuteSelectCategoryCommand);
 
             RefreshCommand = new AsyncRelayCommand(ExecuteRefreshCommand, AsyncRelayCommandOptions.None);
         }
@@ -108,7 +108,6 @@ namespace ExpenseTrackerApp.UI.Modules.ExpenseList
         {
             var sum = Expenses?.Sum(x => x.Amount) ?? 0m;
              TotalCount = sum.ToString("C2", CultureInfo.CurrentCulture);
-
         }
 
         private async Task ExecuteSelectCategoryCommand(CategoryUiModel? model)
@@ -247,6 +246,7 @@ namespace ExpenseTrackerApp.UI.Modules.ExpenseList
                         ShowToaster.show(Languages.LanguagesResources.erroroccurred);
                     }
 
+                    CalSumTotal();
                     Currentstate = (Expenses?.Count > 0) ? LayoutState.Success : LayoutState.Empty;
                 }
                 catch (Exception ex)
