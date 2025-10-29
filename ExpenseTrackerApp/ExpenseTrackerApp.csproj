@@ -64,6 +64,7 @@
 		<PackageReference Include="CommunityToolkit.Maui" Version="3.0.0" />
 		<PackageReference Include="CommunityToolkit.Maui.Core" Version="3.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="DevExpress.Maui.Charts" Version="24.1.8" />
 		<PackageReference Include="FreshMvvm.Maui" Version="0.0.4" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
@@ -100,9 +101,6 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="UI\Controls\LoadingView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="UI\DisconnectionPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="UI\Modules\AddEditExpense\AddEditExpensePage.xaml">

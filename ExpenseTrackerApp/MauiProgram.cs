@@ -1,6 +1,6 @@
-﻿using Android.Content.Res;
-using CommunityToolkit.Maui;
+﻿using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
+using DevExpress.Maui;
 using ExpenseTrackerApp.Helper;
 using ExpenseTrackerApp.Services;
 using ExpenseTrackerApp.Services.Auth;
@@ -25,6 +25,9 @@ namespace ExpenseTrackerApp
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseDevExpress()
+                .UseDevExpressCharts()
+
                  .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -42,8 +45,7 @@ namespace ExpenseTrackerApp
                 })
                 .ConfigureMauiHandlers(handlers =>
                 {
- 
-                  AppHandlers.Init();
+                   AppHandlers.Init();
                 })
                  .UseMauiCommunityToolkit(options =>
                 {
@@ -75,16 +77,15 @@ namespace ExpenseTrackerApp
             builder.Services.AddTransient<ChartPage>();
             builder.Services.AddTransient<ChartPageModel>();
 
+           
             builder.Services.AddSingleton<IHttpProvider, HttpProvider>();
             builder.Services.AddSingleton<IAuthService, AuthService>();
             builder.Services.AddSingleton<IExpenseService, ExpenseService>();
-          
             builder.Services.AddSingleton<ICacheService, PreferenceCacheService>();
              
-            // Build app first
-            var mauiApp = builder.Build();
-
-            // Initialize FreshMvvm against the built app
+             var mauiApp = builder.Build();
+ 
+             // Initialize FreshMvvm 
             mauiApp.UseFreshMvvm();
             return mauiApp; // Return the built app
         }

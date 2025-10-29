@@ -15,7 +15,8 @@
     Title="{x:Static trans:LanguagesResources.Expenses}"
     Padding="10"
     x:DataType="viewModel:ExpenseListPageModel"
-    BackgroundColor="{StaticResource PageBG}">
+    BackgroundColor="{AppThemeBinding Dark={StaticResource PageBG},
+                                      Light={StaticResource PageBG}}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Primary" Text="{Binding TotalCount}" />
@@ -204,7 +205,7 @@
                                     Binding="{Binding IsSelected}"
                                     TargetType="Border"
                                     Value="true">
-                                    <Setter Property="BackgroundColor" Value="{StaticResource Accent}" />
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource Accent}, Light={StaticResource Accent}}" />
                                 </DataTrigger>
                                 <DataTrigger
                                     Binding="{Binding IsSelected}"

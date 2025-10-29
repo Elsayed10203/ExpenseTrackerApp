@@ -56,7 +56,7 @@ namespace ExpenseTrackerApp.UI.Modules.AddEditExpense
 
         private void CheckValid()
         {
-            IsValid = !string.IsNullOrWhiteSpace(ExpenseDescrption) && Amount > 0 && Category != null;  
+            IsValid =  Amount > 0 && Category != null;  
         }
 
         private bool isValid;   

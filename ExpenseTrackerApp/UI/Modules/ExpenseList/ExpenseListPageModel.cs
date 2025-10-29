@@ -25,8 +25,7 @@ namespace ExpenseTrackerApp.UI.Modules.ExpenseList
             AddExpenseCommand = new AsyncRelayCommand(GoToAddExpensePage);
             EditExpenseCommand = new AsyncRelayCommand<ExpenceUiModel>(GoToEditExpensePage);
             DeleteExpenseCommand = new AsyncRelayCommand<ExpenceUiModel>(DeleteExpenseAsync);
-            ClearFilterCommand = new AsyncRelayCommand(ClearFilterAsync);
-            SelectCategoryCommand = new AsyncRelayCommand<CategoryUiModel>(ExecuteSelectCategoryCommand);
+             SelectCategoryCommand = new AsyncRelayCommand<CategoryUiModel>(ExecuteSelectCategoryCommand);
 
             RefreshCommand = new AsyncRelayCommand(ExecuteRefreshCommand, AsyncRelayCommandOptions.None);
         }
@@ -48,11 +47,7 @@ namespace ExpenseTrackerApp.UI.Modules.ExpenseList
             }
         }
 
-        DateTime? StartDateFilter;
-
-        DateTime? EndDateFilter;
-
- 
+  
         private LayoutState currentstate_ = LayoutState.None;
         public LayoutState Currentstate
         {
@@ -266,12 +261,6 @@ namespace ExpenseTrackerApp.UI.Modules.ExpenseList
             }
         }
 
- 
-        private async Task ClearFilterAsync()
-        {
-            StartDateFilter = null;
-            EndDateFilter = null;
-            await LoadExpensesAsync();
-        }
+  
     }
 }

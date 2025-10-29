@@ -20,6 +20,7 @@ namespace ExpenseTrackerApp.UI.Modules
             if (e == null) return;
 
             IsNotConnected = e.NetworkAccess != NetworkAccess.Internet;
+            Helper.ShowToaster.show(IsNotConnected ? "You are offline" : "You are online"); 
         }
 
       

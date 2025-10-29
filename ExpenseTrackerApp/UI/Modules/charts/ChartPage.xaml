@@ -3,13 +3,73 @@
     x:Class="ExpenseTrackerApp.UI.Modules.charts.ChartPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:dxc="clr-namespace:DevExpress.Maui.Charts;assembly=DevExpress.Maui.Charts"
+    xmlns:viewModel="clr-namespace:ExpenseTrackerApp.UI.Modules.charts"
     Title="ChartPage"
     BackgroundColor="{StaticResource PageBG}">
-    <!--<CollectionView ItemsSource="{Binding Expenses}">
-        <CollectionView.ItemTemplate>
-            <DataTemplate>
-                <Label Text="{Binding .}" />
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>-->
+    <ScrollView>
+        <VerticalStackLayout Spacing="20">
+
+            <Border
+                Margin="10"
+                Padding="10"
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 12">
+                <StackLayout Spacing="15">
+                    <Label
+                        FontAttributes="Bold"  
+                        HorizontalOptions="CenterAndExpand"
+                        Text="Summar Dashboard"
+                        TextColor="{StaticResource Gray400}" />
+
+                    <BoxView BackgroundColor="{StaticResource Gray200}" HeightRequest="1" />
+                    <Label
+                        x:Name="lbl"
+                        CharacterSpacing="1"
+                        FontAttributes="Bold"
+                        FontSize="19"
+                        HeightRequest="20"
+                        HorizontalOptions="Center"
+                        Text="{Binding SummaryTotalCount}"
+                        TextColor="{StaticResource Accent}"
+                        WidthRequest="100" />
+
+                    <Label
+                        HorizontalOptions="Center"
+                        Text="Total Expenses"
+                        TextColor="{StaticResource Gray300}" />
+                </StackLayout>
+            </Border>
+
+            <dxc:PieChartView
+                x:Name="chart"
+                Grid.Row="2"
+                HeightRequest="300"
+                HorizontalOptions="Center"
+                IsEnabled="True"
+                WidthRequest="350">
+                <dxc:PieChartView.Series>
+                    <dxc:DonutSeries>
+                        <dxc:DonutSeries.Data>
+                            <dxc:PieSeriesDataAdapter
+                                DataSource="{Binding ChartList}"
+                                LabelDataMember="CatgName"
+                                ValueDataMember="Amount" />
+                        </dxc:DonutSeries.Data>
+
+                        <dxc:DonutSeries.Label>
+                            <dxc:PieSeriesLabel Visible="True" />
+                        </dxc:DonutSeries.Label>
+                    </dxc:DonutSeries>
+                </dxc:PieChartView.Series>
+            </dxc:PieChartView>
+
+            <Button
+                Margin="20"
+                Command="{Binding ExportCommand}"
+                Style="{StaticResource SubmitButtonStyle}"
+                Text="Download CSV"
+                VerticalOptions="End" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
