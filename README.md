@@ -58,5 +58,5 @@ The application follows the **MVVM (Model–View–ViewModel)** pattern using **
 
 ### 2. Clone Repository
 ```bash
-git clone https://github.com/YourUsername/ExpenseTrackerApp.git
+git clone https://github.com/Elsayed10203/ExpenseTrackerApp.git
 cd ExpenseTrackerApp
