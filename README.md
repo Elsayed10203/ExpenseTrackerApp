@@ -12,8 +12,7 @@ The app demonstrates best practices in **MVVM architecture**, **dependency injec
 - View categorized expense summaries
 - Display total amount and currency formatting
 - Bar and Pie chart visualization of expenses
-- Category management (create/edit categories)
-- Local data persistence (mock or API-backed)
+ - Local data persistence (mock or API-backed)
 - Responsive design across Android, iOS, and Windows
 - Theming and Material Design UI
 
