@@ -1,0 +1,96 @@
+name: .NET MAUI CI
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main, develop ]
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  MAUI_VERSION: '10.0.x'
+  PROJECT_PATH: 'ExpenseTrackerApp/ExpenseTrackerApp.csproj'
+  
+jobs:
+  build-android:
+    runs-on: windows-latest
+    name: Android Build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Install .NET MAUI Workload
+      run: dotnet workload install maui --ignore-failed-sources
+      
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+      
+    - name: Build Android
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net10.0-android --no-restore
+      
+    - name: Upload Android Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-build
+        path: ExpenseTrackerApp/bin/Release/net10.0-android/**/*.apk
+        if-no-files-found: warn
+
+  build-ios:
+    runs-on: macos-latest
+    name: iOS Build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Install .NET MAUI Workload
+      run: dotnet workload install maui --ignore-failed-sources
+      
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+      
+    - name: Build iOS
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net10.0-ios --no-restore /p:BuildIpa=True
+      
+    - name: Upload iOS Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ios-build
+        path: ExpenseTrackerApp/bin/Release/net10.0-ios/**/*.app
+        if-no-files-found: warn
+
+  test:
+    runs-on: windows-latest
+    name: Run Tests
+    needs: [build-android]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Install .NET MAUI Workload
+      run: dotnet workload install maui --ignore-failed-sources
+      
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+      
+    # Add this when you have test projects
+    # - name: Run Tests
+    #   run: dotnet test --no-restore --verbosity normal

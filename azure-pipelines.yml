@@ -1,0 +1,156 @@
+# Azure DevOps Pipeline for .NET MAUI
+
+trigger:
+  branches:
+    include:
+    - master
+    - main
+    - develop
+  tags:
+    include:
+    - v*
+
+pr:
+  branches:
+    include:
+    - master
+    - main
+    - develop
+
+variables:
+  dotnetVersion: '10.0.x'
+  projectPath: 'ExpenseTrackerApp/ExpenseTrackerApp.csproj'
+  buildConfiguration: 'Release'
+
+stages:
+- stage: Build
+  displayName: 'Build Stage'
+  jobs:
+  
+  - job: BuildAndroid
+    displayName: 'Build Android'
+    pool:
+      vmImage: 'windows-latest'
+    
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Install .NET SDK'
+      inputs:
+        version: $(dotnetVersion)
+        
+    - script: dotnet workload install maui --ignore-failed-sources
+      displayName: 'Install .NET MAUI Workload'
+      
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore NuGet Packages'
+      inputs:
+        command: 'restore'
+        projects: '$(projectPath)'
+        
+    - task: DotNetCoreCLI@2
+      displayName: 'Build Android'
+      inputs:
+        command: 'build'
+        projects: '$(projectPath)'
+        arguments: '-c $(buildConfiguration) -f net10.0-android --no-restore'
+        
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Android Artifacts'
+      inputs:
+        pathToPublish: 'ExpenseTrackerApp/bin/$(buildConfiguration)/net10.0-android'
+        artifactName: 'android-build'
+
+  - job: BuildiOS
+    displayName: 'Build iOS'
+    pool:
+      vmImage: 'macos-latest'
+    
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Install .NET SDK'
+      inputs:
+        version: $(dotnetVersion)
+        
+    - script: dotnet workload install maui --ignore-failed-sources
+      displayName: 'Install .NET MAUI Workload'
+      
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore NuGet Packages'
+      inputs:
+        command: 'restore'
+        projects: '$(projectPath)'
+        
+    - task: DotNetCoreCLI@2
+      displayName: 'Build iOS'
+      inputs:
+        command: 'build'
+        projects: '$(projectPath)'
+        arguments: '-c $(buildConfiguration) -f net10.0-ios --no-restore /p:BuildIpa=True'
+        
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish iOS Artifacts'
+      inputs:
+        pathToPublish: 'ExpenseTrackerApp/bin/$(buildConfiguration)/net10.0-ios'
+        artifactName: 'ios-build'
+
+- stage: Release
+  displayName: 'Release Stage'
+  dependsOn: Build
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+  
+  jobs:
+  - job: PublishAndroid
+    displayName: 'Publish Android APK'
+    pool:
+      vmImage: 'windows-latest'
+      
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Install .NET SDK'
+      inputs:
+        version: $(dotnetVersion)
+        
+    - script: dotnet workload install maui --ignore-failed-sources
+      displayName: 'Install .NET MAUI Workload'
+      
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish Android APK'
+      inputs:
+        command: 'publish'
+        projects: '$(projectPath)'
+        arguments: '-c $(buildConfiguration) -f net10.0-android'
+        publishWebProjects: false
+        
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish APK Artifact'
+      inputs:
+        pathToPublish: 'ExpenseTrackerApp/bin/$(buildConfiguration)/net10.0-android/publish'
+        artifactName: 'android-release'
+
+  - job: PublishiOS
+    displayName: 'Publish iOS IPA'
+    pool:
+      vmImage: 'macos-latest'
+      
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Install .NET SDK'
+      inputs:
+        version: $(dotnetVersion)
+        
+    - script: dotnet workload install maui --ignore-failed-sources
+      displayName: 'Install .NET MAUI Workload'
+      
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish iOS IPA'
+      inputs:
+        command: 'publish'
+        projects: '$(projectPath)'
+        arguments: '-c $(buildConfiguration) -f net10.0-ios /p:BuildIpa=true /p:RuntimeIdentifier=ios-arm64 /p:ArchiveOnBuild=true'
+        publishWebProjects: false
+        
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish IPA Artifact'
+      inputs:
+        pathToPublish: 'ExpenseTrackerApp/bin/$(buildConfiguration)/net10.0-ios/ios-arm64/publish'
+        artifactName: 'ios-release'
